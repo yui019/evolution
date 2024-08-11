@@ -1,0 +1,9 @@
+[submodule "subprojects/raylib"]
+	path = subprojects/raylib
+	url = https://github.com/raysan5/raylib/
+[submodule "subprojects/rlImGui/repo"]
+	path = subprojects/rlImGui/repo
+	url = https://github.com/raylib-extras/rlImGui
+[submodule "subprojects/imgui/repo"]
+	path = subprojects/imgui/repo
+	url = https://github.com/ocornut/imgui/
