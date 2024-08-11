@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
 
 #include "raylib.h"
 
@@ -8,4 +8,4 @@ Camera2D create_camera();
 void update_camera(Camera2D &camera);
 }; // namespace evo
 
-#endif // CAMERA_H
+#endif // CAMERA_HPP
