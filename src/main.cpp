@@ -1,6 +1,7 @@
 #include "rlImGui.h"
 #include "imgui.h"
 #include "raylib.h"
+#include "camera/camera.hpp"
 
 #define SCREEN_WIDTH  1920
 #define SCREEN_HEIGHT 1080
@@ -13,10 +14,21 @@ int main() {
 
 	rlImGuiSetup(true);
 
+	auto camera = evo::create_camera();
+
 	while (!WindowShouldClose()) {
+		evo::update_camera(camera);
+
 		BeginDrawing();
 		{
 			ClearBackground(WHITE);
+
+			BeginMode2D(camera);
+			{
+				DrawCircle(GetScreenWidth() / 2, GetScreenHeight() / 2, 50,
+				           MAROON);
+			}
+			EndMode2D();
 
 			rlImGuiBegin();
 			{ ImGui::ShowDemoWindow(); }
