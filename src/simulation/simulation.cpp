@@ -38,22 +38,24 @@ void evo::Simulation::run() {
 }
 
 void evo::Simulation::update() {
+	// Handle mouse click
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 		Vector2 mouse_coords = this->_mouse_coords();
 
-		size_t i = 0;
-		for (Creature &creature : this->_world.creatures) {
+		// If the click was inside a creature, mark it as selected
+		for (size_t i = 0; i < this->_world.creatures.size(); ++i) {
+			Creature &creature = this->_world.creatures[i];
+
 			if (creature.contains_point(mouse_coords)) {
 				this->_selected_creature = i;
 				break;
 			}
-
-			i++;
 		}
 	}
 
 	evo::update_camera(this->_camera);
 
+	// Only update if not paused
 	if (!this->_paused) {
 		this->_world.update(this->_selected_creature);
 	}
@@ -81,12 +83,16 @@ void evo::Simulation::draw() {
 }
 
 Vector2 evo::Simulation::_mouse_coords() const {
+	// This offset is needed because the world is drawn in the center of the
+	// screen when the simulation starts
 	Vector2 offset =
 	    Vector2{(float)(this->simulation_width - this->window_width) / 2.0f,
 	            (float)(this->simulation_height - this->window_height) / 2.0f};
 
+	// Get screen coordinates of the mouse
 	Vector2 coords = GetMousePosition();
 
+	// Get world coordinates
 	Vector2 result = GetScreenToWorld2D(
 	    Vector2{
 	        coords.x,
@@ -94,6 +100,7 @@ Vector2 evo::Simulation::_mouse_coords() const {
 	    },
 	    this->_camera);
 
+	// Apply offset to the world coordinates
 	result.x += offset.x;
 	result.y += offset.y;
 

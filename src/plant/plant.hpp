@@ -10,13 +10,19 @@ const uint64_t PLANT_SIZE         = 50;
 
 struct Plant {
 	Vector2 position;
+
+	// Whether the plant is grown or not
 	bool grown;
+
+	// Simulation time when the plant started growing (it starts growing
+	// immediately after being eaten)
 	uint64_t growing_start_time;
 
 	static Plant random(Vector2 world_size);
 
 	void eat(uint64_t current_time);
 
+	// Whether or not the plant has finished growing.
 	// Only call if grown is false
 	bool finished_growing(uint64_t current_time);
 

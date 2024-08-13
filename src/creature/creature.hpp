@@ -19,7 +19,7 @@ const float CREATURE_MUTATION_PROBABILITY             = 0.1f;
 
 struct CreatureDna {
 	float speed;
-	float food_detection_radius;
+	float plant_detection_radius;
 };
 
 enum class CreatureState {
@@ -39,23 +39,29 @@ struct Creature {
 	Vector2 plant_location;     // used if state is MovingTowardsPlant
 	size_t plant_index;         // used if state is MovingTowardsPlant
 	uint64_t eating_start_time; // used if state is Eating
+
+	// Amount of simulation time that's passed since the creature was created
 	uint64_t lifetime;
 
 	static Creature random(Vector2 world_size);
 
-	// mutation_probability is from 0.0 to 1.0
+	// Only call with mutation_probability from 0.0 to 1.0
 	static Creature from_parent(Creature &parent, float mutation_probability);
 
 	void update(uint64_t current_time, Vector2 world_size,
 	            std::vector<evo::Plant> &plants);
+
 	void draw(Vector2 offset) const;
 
-	// Only call if current state is Eating
+	// Whether or not the creature has finished eating.
+	// Only call if state is Eating.
 	bool finished_eating(uint64_t current_time);
 
+	// Whether or not the creature contains a certain point
 	bool contains_point(Vector2 point);
 
   private:
+	// Try to find the nearest plant in the creature's plant_detection_radius
 	std::optional<size_t> _find_plant(std::vector<evo::Plant> &plants);
 };
 

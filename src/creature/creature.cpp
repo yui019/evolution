@@ -23,8 +23,8 @@ evo::Creature evo::Creature::random(Vector2 world_size) {
     };
 
 	CreatureDna dna;
-	dna.food_detection_radius = evo::random_float(100.0f, 1000.0f);
-	dna.speed                 = evo::random_float(1.0f, 50.0f);
+	dna.plant_detection_radius = evo::random_float(100.0f, 1000.0f);
+	dna.speed                  = evo::random_float(1.0f, 50.0f);
 
 	creature.dna = dna;
 
@@ -50,7 +50,7 @@ evo::Creature evo::Creature::from_parent(Creature &parent,
 
 	float r_food_detection_radius = evo::random_float();
 	if (r_food_detection_radius <= mutation_probability) {
-		creature.dna.food_detection_radius += evo::random_float(0.0f, 20.0f);
+		creature.dna.plant_detection_radius += evo::random_float(0.0f, 20.0f);
 	}
 
 	return creature;
@@ -63,14 +63,17 @@ void evo::Creature::update(u_int64_t current_time, Vector2 world_size,
 	if (this->state != CreatureState::Eating) {
 		Vector2 prev_pos = this->position;
 
+		// Update position
 		this->position.x += this->dna.speed * this->direction.x;
 		this->position.y += this->dna.speed * this->direction.y;
 
 		Vector2 current_pos = this->position;
 
+		// Reduce energy proportional to how much the creature has moved
 		float distance = abs(Vector2DistanceSqr(prev_pos, current_pos));
 		this->energy -= CREATURE_ENERGY_DROP_PER_DISTANCE_SQUARED * distance;
 
+		// Turn in the opposite if the creature reachest the edges of the world
 		if (this->position.x < 0) {
 			this->position.x = 0;
 			this->direction.x *= -1;
@@ -90,25 +93,32 @@ void evo::Creature::update(u_int64_t current_time, Vector2 world_size,
 	}
 
 	if (this->state == CreatureState::Aimless) {
+		// Update direction
 		this->direction.x = evo::random_float(-1.0, 1.0);
 		this->direction.y = evo::random_float(-1.0, 1.0);
 
+		// If a plant was found
 		auto found_plant = this->_find_plant(plants);
 		if (found_plant.has_value()) {
 			Vector2 found_plant_pos = plants[*found_plant].position;
 
+			// Save its location and index
 			this->plant_location = found_plant_pos;
 			this->plant_index    = *found_plant;
 
+			// Update state
 			this->state = CreatureState::MovingTowardsPlant;
 
+			// Update direction to point towards the plant
 			this->direction = Vector2Normalize(
 			    Vector2Subtract(found_plant_pos, this->position));
 		}
 	} else if (this->state == CreatureState::MovingTowardsPlant) {
+		// Calculate distance from the creature to the plant it's moving towards
 		float distance =
 		    Vector2DistanceSqr(this->plant_location, this->position);
 
+		// If the creature is close enough to the plant, it's started eating it
 		if (distance <= pow(CREATURE_EATING_DISTANCE, 2)) {
 			this->state             = CreatureState::Eating;
 			this->eating_start_time = current_time;
@@ -125,8 +135,10 @@ bool evo::Creature::finished_eating(uint64_t current_time) {
 }
 
 void evo::Creature::draw(Vector2 offset) const {
+	// MovingTowardsPlant = Blue
+	// Aimless            = Red
+	// Eating             = Orange
 	Color color = BLUE;
-
 	if (this->state == CreatureState::Aimless) {
 		color = RED;
 	} else if (this->state == CreatureState::Eating) {
@@ -150,21 +162,26 @@ evo::Creature::_find_plant(std::vector<evo::Plant> &plants) {
 	float found_plant_distance_squared = INT_MAX;
 	size_t found_plant_index;
 
+	// Go through each plant
 	bool plant_found = false;
 	for (size_t i = 0; i < plants.size(); ++i) {
 		evo::Plant plant = plants[i];
 
+		// Ignore if the plant isn't grown
 		if (!plant.grown) {
 			continue;
 		}
 
+		// Calculate the creature's distance (squared) to the plant
 		float distance_squared = pow(this->position.x - plant.position.x, 2) +
 		                         pow(this->position.y - plant.position.y, 2);
 
-		if (distance_squared >= pow(this->dna.food_detection_radius, 2)) {
+		// Ignore if distance is too large
+		if (distance_squared >= pow(this->dna.plant_detection_radius, 2)) {
 			continue;
 		}
 
+		// Store distance and index of the closest plant
 		if (distance_squared < found_plant_distance_squared) {
 			plant_found = true;
 
