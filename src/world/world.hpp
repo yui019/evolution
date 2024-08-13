@@ -23,8 +23,6 @@ class World {
 
 	void update(std::optional<size_t> &selected_creature);
 	void draw() const;
-
-	Vector2 mouse_coords(Camera2D camera) const;
 };
 } // namespace evo
 

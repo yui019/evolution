@@ -102,24 +102,3 @@ void evo::World::draw() const {
 		creature.draw(offset);
 	}
 }
-
-Vector2 evo::World::mouse_coords(Camera2D camera) const {
-	Vector2 offset = Vector2{(this->world_size.x - this->window_size.x) / 2,
-	                         (this->world_size.y - this->window_size.y) / 2};
-
-	Vector2 coords = GetMousePosition();
-
-	Vector2 result = GetScreenToWorld2D(
-	    Vector2{
-	        coords.x,
-	        coords.y,
-	    },
-	    camera);
-
-	result.x += offset.x;
-	result.y += offset.y;
-
-	printf("MOUSE POSITION: %f, %f\n", result.x, result.y);
-
-	return result;
-}
