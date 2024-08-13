@@ -21,8 +21,6 @@ class World {
 
 	World(float width, float height, float window_width, float window_height);
 
-	void handle_mouse_left_pressed(std::optional<size_t> &selected_creature,
-	                               Camera2D camera);
 	void update(std::optional<size_t> &selected_creature);
 	void draw() const;
 

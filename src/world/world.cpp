@@ -27,21 +27,6 @@ evo::World::World(float width, float height, float window_width,
 	}
 }
 
-void evo::World::handle_mouse_left_pressed(
-    std::optional<size_t> &selected_creature, Camera2D camera) {
-	Vector2 mouse_coords = this->mouse_coords(camera);
-
-	size_t i = 0;
-	for (Creature &creature : this->creatures) {
-		if (creature.contains_point(mouse_coords)) {
-			selected_creature = i;
-			break;
-		}
-
-		i++;
-	}
-}
-
 void evo::World::update(std::optional<size_t> &selected_creature) {
 	this->current_time++;
 

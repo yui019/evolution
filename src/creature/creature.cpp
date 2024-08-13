@@ -58,9 +58,7 @@ evo::Creature evo::Creature::from_parent(Creature &parent,
 
 void evo::Creature::update(u_int64_t current_time, Vector2 world_size,
                            std::vector<evo::Plant> &plants) {
-	printf("Incrementing lifetime %zu", this->lifetime);
 	this->lifetime += 1;
-	printf(" -> %zu\n", this->lifetime);
 
 	if (this->state != CreatureState::Eating) {
 		Vector2 prev_pos = this->position;
