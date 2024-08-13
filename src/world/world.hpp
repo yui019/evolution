@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace evo {
-const uint32_t WORLD_CREATURES_COUNT = 200;
+const uint32_t WORLD_CREATURES_COUNT = 100;
 const uint32_t WORLD_PLANTS_COUNT    = 400;
 
 class World {
