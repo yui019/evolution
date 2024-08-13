@@ -10,18 +10,18 @@
 
 evo::World::World(float width, float height, float window_width,
                   float window_height) {
-	this->size        = Vector2{width, height};
+	this->world_size  = Vector2{width, height};
 	this->window_size = Vector2{window_width, window_height};
 
 	for (size_t i = 0; i < WORLD_CREATURES_COUNT; ++i) {
-		Creature creature = Creature::random(this->size);
+		Creature creature = Creature::random(this->world_size);
 
 		this->creatures.push_back(creature);
 	}
 
 	this->plants.reserve(WORLD_PLANTS_COUNT);
 	for (size_t i = 0; i < WORLD_PLANTS_COUNT; ++i) {
-		Plant plant = Plant::random(this->size);
+		Plant plant = Plant::random(this->world_size);
 
 		this->plants.push_back(plant);
 	}
@@ -32,7 +32,7 @@ void evo::World::update(std::optional<size_t> &selected_creature) {
 
 	size_t i = 0;
 	for (Creature &creature : this->creatures) {
-		creature.update(this->current_time, this->size, this->plants);
+		creature.update(this->current_time, this->world_size, this->plants);
 
 		if (creature.lifetime >= CREATURE_MAX_LIFETIME ||
 		    creature.energy <= 0.0f) {
@@ -79,8 +79,8 @@ void evo::World::update(std::optional<size_t> &selected_creature) {
 	for (auto &plant : this->plants) {
 		if (!plant.grown && plant.finished_growing(this->current_time)) {
 			plant.position = Vector2{
-			    evo::random_float(0.0f, this->size.x),
-			    evo::random_float(0.0f, this->size.y),
+			    evo::random_float(0.0f, this->world_size.x),
+			    evo::random_float(0.0f, this->world_size.y),
 			};
 			plant.grown = true;
 		}
@@ -88,10 +88,11 @@ void evo::World::update(std::optional<size_t> &selected_creature) {
 }
 
 void evo::World::draw() const {
-	Vector2 offset = Vector2{-(this->size.x - this->window_size.x) / 2,
-	                         -(this->size.y - this->window_size.y) / 2};
+	Vector2 offset = Vector2{-(this->world_size.x - this->window_size.x) / 2,
+	                         -(this->world_size.y - this->window_size.y) / 2};
 
-	DrawRectangle(offset.x, offset.y, this->size.x, this->size.y, RAYWHITE);
+	DrawRectangle(offset.x, offset.y, this->world_size.x, this->world_size.y,
+	              RAYWHITE);
 
 	for (auto plant : this->plants) {
 		plant.draw(offset);
@@ -103,8 +104,8 @@ void evo::World::draw() const {
 }
 
 Vector2 evo::World::mouse_coords(Camera2D camera) const {
-	Vector2 offset = Vector2{(this->size.x - this->window_size.x) / 2,
-	                         (this->size.y - this->window_size.y) / 2};
+	Vector2 offset = Vector2{(this->world_size.x - this->window_size.x) / 2,
+	                         (this->world_size.y - this->window_size.y) / 2};
 
 	Vector2 coords = GetMousePosition();
 

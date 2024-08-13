@@ -12,7 +12,7 @@ const uint32_t WORLD_PLANTS_COUNT    = 400;
 class World {
   public:
 	Vector2 window_size;
-	Vector2 size;
+	Vector2 world_size;
 
 	std::vector<evo::Creature> creatures;
 	std::vector<evo::Plant> plants;
