@@ -21,6 +21,8 @@ evo::Simulation::Simulation(uint32_t simulation_width,
 	this->_selected_creature           = std::nullopt;
 	this->_paused                      = false;
 	this->_stats_last_measurement_time = 0;
+	this->_stats_stride                = 0;
+	this->_stats_shown                 = false;
 
 	this->_camera = evo::create_camera();
 

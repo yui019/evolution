@@ -15,6 +15,8 @@ class Simulation {
 	Camera2D _camera;
 	SimulationStats _stats;
 	uint64_t _stats_last_measurement_time;
+	int _stats_stride;
+	bool _stats_shown;
 
   public:
 	uint32_t simulation_width;
