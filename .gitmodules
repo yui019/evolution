@@ -4,9 +4,6 @@
 [submodule "subprojects/rlImGui/repo"]
 	path = subprojects/rlImGui/repo
 	url = https://github.com/raylib-extras/rlImGui
-[submodule "subprojects/imgui/repo"]
-	path = subprojects/imgui/repo
-	url = https://github.com/ocornut/imgui/
 [submodule "subprojects/implot/repo"]
 	path = subprojects/implot/repo
 	url = https://github.com/epezent/implot
