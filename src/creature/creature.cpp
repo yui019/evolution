@@ -71,7 +71,8 @@ void evo::Creature::update(u_int64_t current_time, Vector2 world_size,
 
 		// Reduce energy proportional to how much the creature has moved
 		float distance = abs(Vector2DistanceSqr(prev_pos, current_pos));
-		this->energy -= CREATURE_ENERGY_DROP_PER_DISTANCE_SQUARED * distance;
+		float speed    = this->dna.speed;
+		this->energy -= CREATURE_ENERGY_DROP_SPEED * speed * sqrt(distance);
 
 		// Turn in the opposite if the creature reachest the edges of the world
 		if (this->position.x < 0) {

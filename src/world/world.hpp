@@ -7,7 +7,7 @@
 
 namespace evo {
 const uint32_t WORLD_CREATURES_COUNT = 100;
-const uint32_t WORLD_PLANTS_COUNT    = 400;
+const uint32_t WORLD_PLANTS_COUNT    = 1000;
 
 class World {
   public:

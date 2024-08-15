@@ -30,9 +30,9 @@ bool evo::Plant::finished_growing(uint64_t current_time) {
 }
 
 void evo::Plant::draw(Vector2 offset) const {
-	Color color = this->grown ? GREEN : BLACK;
-
-	DrawRectangle(this->position.x - (int)(PLANT_SIZE / 2) + offset.x,
-	              this->position.y - (int)(PLANT_SIZE / 2) + offset.y,
-	              PLANT_SIZE, PLANT_SIZE, color);
+	if (this->grown) {
+		DrawRectangle(this->position.x - (int)(PLANT_SIZE / 2) + offset.x,
+		              this->position.y - (int)(PLANT_SIZE / 2) + offset.y,
+		              PLANT_SIZE, PLANT_SIZE, GREEN);
+	}
 }

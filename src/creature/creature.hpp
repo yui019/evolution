@@ -9,13 +9,13 @@
 #include <vector>
 
 namespace evo {
-const float CREATURE_EATING_DISTANCE                  = 50;
-const uint64_t CREATURE_EATING_TIME                   = 100;
-const uint64_t CREATURE_SIZE                          = 20;
-const float CREATURE_ENERGY_DROP_PER_DISTANCE_SQUARED = 0.0001;
-const uint64_t CREATURE_MAX_LIFETIME                  = 2000;
-const uint64_t CREATURE_REPLICATION_MIN_LIFETIME      = 100;
-const float CREATURE_MUTATION_PROBABILITY             = 0.1f;
+const float CREATURE_EATING_DISTANCE             = 50;
+const uint64_t CREATURE_EATING_TIME              = 100;
+const uint64_t CREATURE_SIZE                     = 20;
+const float CREATURE_ENERGY_DROP_SPEED           = 0.00005;
+const uint64_t CREATURE_MAX_LIFETIME             = 2000;
+const uint64_t CREATURE_REPLICATION_MIN_LIFETIME = 100;
+const float CREATURE_MUTATION_PROBABILITY        = 0.1f;
 
 struct CreatureDna {
 	float speed;

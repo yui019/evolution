@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace evo {
-const uint32_t SIMULATION_STATS_MEASUREMENT_PERIOD = 250;
+const uint32_t SIMULATION_STATS_MEASUREMENT_PERIOD = 1000;
 
 // These are all stats gathered every SIMULATION_STATS_MEASUREMENT_PERIOD frames
 struct SimulationStats {

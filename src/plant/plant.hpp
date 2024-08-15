@@ -5,8 +5,8 @@
 #include <cstdint>
 
 namespace evo {
-const uint64_t PLANT_GROWING_TIME = 300;
-const uint64_t PLANT_SIZE         = 50;
+const uint64_t PLANT_GROWING_TIME = 100;
+const uint64_t PLANT_SIZE         = 20;
 
 struct Plant {
 	Vector2 position;
