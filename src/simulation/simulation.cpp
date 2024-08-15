@@ -1,7 +1,13 @@
 #include "simulation.hpp"
+#include "imgui.h"
+#include "implot.h"
 #include "src/camera/camera.hpp"
 #include "raylib.h"
 #include "rlImGui.h"
+#include "src/simulation/stats/stats.hpp"
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
 #include <ctime>
 #include <cstdlib>
 
@@ -12,8 +18,9 @@ evo::Simulation::Simulation(uint32_t simulation_width,
       simulation_width(simulation_width), simulation_height(simulation_height),
       window_width(window_width), window_height(window_height) {
 
-	this->_selected_creature = std::nullopt;
-	this->_paused            = false;
+	this->_selected_creature           = std::nullopt;
+	this->_paused                      = false;
+	this->_stats_last_measurement_time = 0;
 
 	this->_camera = evo::create_camera();
 
@@ -23,9 +30,11 @@ evo::Simulation::Simulation(uint32_t simulation_width,
 	InitWindow(window_width, window_height, "Evolution");
 
 	rlImGuiSetup(true);
+	ImPlot::CreateContext();
 }
 
 evo::Simulation::~Simulation() {
+	ImPlot::DestroyContext();
 	rlImGuiShutdown();
 	CloseWindow();
 }
@@ -38,8 +47,18 @@ void evo::Simulation::run() {
 }
 
 void evo::Simulation::update() {
+	ImGuiIO &io = ImGui::GetIO();
+
+	// Measure stats
+	uint64_t measurement_elapsed =
+	    this->_world.current_time - this->_stats_last_measurement_time;
+	if (this->_world.current_time == 0 ||
+	    measurement_elapsed >= SIMULATION_STATS_MEASUREMENT_PERIOD) {
+		this->_measure_stats();
+	}
+
 	// Handle mouse click
-	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !io.WantCaptureMouse) {
 		Vector2 mouse_coords = this->_mouse_coords();
 
 		// If the click was inside a creature, mark it as selected
@@ -53,7 +72,9 @@ void evo::Simulation::update() {
 		}
 	}
 
-	evo::update_camera(this->_camera);
+	if (!io.WantCaptureMouse) {
+		evo::update_camera(this->_camera);
+	}
 
 	// Only update if not paused
 	if (!this->_paused) {
@@ -74,6 +95,7 @@ void evo::Simulation::draw() {
 		{
 			this->_draw_ui_controls();
 			this->_draw_ui_selected_creature();
+			this->_draw_ui_stats();
 		}
 		rlImGuiEnd();
 
@@ -105,4 +127,27 @@ Vector2 evo::Simulation::_mouse_coords() const {
 	result.y += offset.y;
 
 	return result;
+}
+
+void evo::Simulation::_measure_stats() {
+	size_t number_of_creatures = this->_world.creatures.size();
+	this->_stats.number_of_creatures.push_back(number_of_creatures);
+
+	float speed_sum  = 0.0;
+	int speed_count  = 0;
+	float radius_sum = 0.0;
+	int radius_count = 0;
+	for (Creature &creature : this->_world.creatures) {
+		speed_sum += creature.dna.speed;
+		radius_sum += creature.dna.plant_detection_radius;
+
+		speed_count++;
+		radius_count++;
+	}
+
+	float average_speed  = speed_sum / speed_count;
+	float average_radius = radius_sum / radius_count;
+
+	this->_stats.average_speed.push_back(average_speed);
+	this->_stats.average_plant_detection_radius.push_back(average_radius);
 }

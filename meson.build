@@ -24,13 +24,19 @@ rlimgui_dep = rlimgui_proj.get_variable('rlimgui_dep')
 imgui_proj = subproject('imgui')
 imgui_dep = imgui_proj.get_variable('libimgui_dep')
 
+implot_proj = subproject('implot')
+implot_dep = implot_proj.get_variable('libimplot_dep')
+
 deps = [
   cxx.find_library('dl'),
   cxx.find_library('m'),
   raylib_dep,
   imgui_dep,
   rlimgui_dep,
+  implot_dep,
 ]
+
+# add_project_arguments('-DIMGUI_USER_CONFIG="imgui_config.h"', language : 'cpp')
 
 executable('evolution',
   sources: src,

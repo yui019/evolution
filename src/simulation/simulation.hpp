@@ -2,8 +2,10 @@
 #define SIMULATION_HPP
 
 #include "raylib.h"
+#include "stats/stats.hpp"
 #include "src/world/world.hpp"
 #include <cstdint>
+
 namespace evo {
 class Simulation {
   private:
@@ -11,6 +13,8 @@ class Simulation {
 	std::optional<size_t> _selected_creature;
 	bool _paused;
 	Camera2D _camera;
+	SimulationStats _stats;
+	uint64_t _stats_last_measurement_time;
 
   public:
 	uint32_t simulation_width;
@@ -31,8 +35,11 @@ class Simulation {
   private:
 	Vector2 _mouse_coords() const;
 
+	void _measure_stats();
+
 	void _draw_ui_controls();
 	void _draw_ui_selected_creature();
+	void _draw_ui_stats();
 };
 } // namespace evo
 
